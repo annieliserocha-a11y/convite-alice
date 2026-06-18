@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite Real da Princesa Alice</title>
+    <style>
+        /* Configurações Gerais - Tema Rapunzel (Roxo, Rosa e Dourado) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #0F0C20, #1A103C, #331A54, #4A286C);
+            color: #F8F4E3;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Céu Estrelado */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 2 2"><circle cx="1" cy="1" r="1" fill="white" opacity="0.8"/></svg>') repeat;
+            animation: twinkle 4s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Lanternas Flutuantes */
+        #lantern-container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .lantern {
+            position: absolute;
+            bottom: -50px;
+            width: 18px;
+            height: 26px;
+            background: linear-gradient(to bottom, rgba(255, 210, 120, 0.9), rgba(255, 140, 50, 0.7));
+            border-radius: 6px 6px 4px 4px;
+            box-shadow: 0 0 15px #FFB347, 0 0 30px #FF8C00;
+            animation: floatUp 14s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0) scale(0.7) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.9; }
+            100% { transform: translateY(-110vh) translateX(70px) scale(1.3) rotate(15deg); opacity: 0; }
+        }
+
+        /* TELA 1: Botão de Abertura */
+        .screen-gate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: radial-gradient(circle, #1E123B, #0F0C20);
+            transition: opacity 1.2s ease, visibility 1.2s;
+        }
+
+        .btn-abrir {
+            background: linear-gradient(135deg, #FFE082, #D4AF37, #AA7C11);
+            color: #1A103C;
+            border: 2px solid #FFF;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(214, 175, 55, 0.7);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-abrir:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 35px rgba(214, 175, 55, 1);
+        }
+
+        /* TELA 2: Introdução Animada "Era uma vez..." */
+        .screen-intro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #1A103C;
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .text-era-uma-vez {
+            font-size: 2.2rem;
+            color: #FFF;
+            font-style: italic;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 2s ease;
+        }
+
+        /* TELA 3: O Convite Principal */
+        .main-invitation {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 40px 20px 60px 20px;
+            position: relative;
+            z-index: 10;
+            display: none;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        /* Moldura de Princesa Mágica */
+        .princess-frame {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 0 auto 30px auto;
+            border-radius: 50%;
+            padding: 8px;
+            background: linear-gradient(135deg, #D4AF37, #FFF, #AA7C11, #FFE082);
+            box-shadow: 0 0 30px rgba(214, 175, 55, 0.8), inset 0 0 15px rgba(0,0,0,0.5);
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        .princess-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #1A103C;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 25px rgba(214, 175, 55, 0.7); }
+            50% { box-shadow: 0 0 40px rgba(214, 175, 55, 1); }
+        }
+
+        /* Título e Textos */
+        .crown-icon {
+            font-size: 2.5rem;
+            color: #D4AF37;
+            text-shadow: 0 0 10px rgba(214, 175, 55, 0.5);
+            margin-bottom: 10px;
+        }
+
+        h1.title {
+            font-size: 2.5rem;
+            color: #FFF;
+            text-shadow: 0 0 15px #D4AF37;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #F8F4E3;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        /* Pergaminho / Bloco de Informações */
+        .card-info {
+            background: rgba(38, 24, 66, 0.75);
+            border: 2px solid rgba(214, 175, 55, 0.4);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .card-info h2 {
+            font-size: 1.4rem;
+            color: #FFE082;
+            margin-bottom: 15px;
+        }
+
+        .details-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #FFF;
+        }
+
+        /* Contagem Regressiva */
+        .countdown-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0 10px 0;
+        }
+
+        .countdown-box {
+            background: rgba(214, 175, 55, 0.15);
+            border: 1px solid #D4AF37;
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 65px;
+        }
+
+        .countdown-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFF;
+            display: block;
+        }
+
+        .countdown-label {
+            font-size: 0.75rem;
+            color: #FFE082;
+            text-transform: uppercase;
+        }
+
+        /* Botões de Ação Interativos */
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, #4A286C, #331A54);
+            color: #FFF;
+            border: 1px solid #D4AF37;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-action:hover {
+            background: linear-gradient(135deg, #D4AF37, #AA7C11);
+            color: #1A103C;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(214, 175, 55, 0.4);
+        }
+
+        .btn-presentes {
+            background: linear-gradient(135deg, #D4AF37, #AA7C11);
+            color: #1A103C;
+            border: 1px solid #FFF;
+        }
+        .btn-presentes:hover {
+            background: linear-gradient(135deg, #FFE082, #D4AF37);
+        }
+
+        /* Seção Galeria de Fotos */
+        .section-gallery {
+            margin-top: 40px;
+        }
+
+        .section-gallery h3 {
+            font-size: 1.4rem;
+            color: #FFE082;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(214, 175, 55, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            aspect-ratio: 3/4;
+            background: #261842;
+        }
+
+        .gallery-item.horizontal {
+            grid-column: span 2;
+            aspect-ratio: 16/10;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        /* Helpers utilitários */
+        .hidden-gate {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+    <div id="lantern-container"></div>
+
+    <div class="screen-gate" id="gateScreen">
+        <button class="btn-abrir" onclick="startRoyalJourney()">✨ Abrir Convite Real</button>
+    </div>
+
+    <div class="screen-intro" id="introScreen">
+        <div class="text-era-uma-vez" id="introText">
+            "Era uma vez uma princesa chamada Alice..."
+        </div>
+    </div>
+
+    <div class="main-invitation" id="mainInvitation">
+        
+        <div class="crown-icon">👑</div>
+        <h1 class="title">Princesa Alice</h1>
+        <div class="subtitle">Celebra seus 5 Anos</div>
+
+        <div class="princess-frame">
+            <img src="alice-principal.jpg" alt="Princesa Alice">
+        </div>
+
+        <div class="card-info">
+            <h2>O Chamado Real</h2>
+            <p class="details-text">
+                O Reino está em festa! <br>
+                Você foi convocado para celebrar o aniversário mágico da nossa princesinha.
+            </p>
+            
+            <hr style="border: 0; border-top: 1px solid rgba(214, 175, 55, 0.3); margin: 15px 0;">
+            
+            <p class="details-text" style="color: #FFE082; font-weight: bold;">
+                📅 Sábado, 17 de Outubro de 2026<br>
+                ⏰ Às 16:00 Horas<br>
+                🏰 Nome do Salão ou Local Aqui
+            </p>
+        </div>
+
+        <div class="card-info">
+            <h2>Contagem Regressiva para o Encanto</h2>
+            <div class="countdown-container">
+                <div class="countdown-box"><span class="countdown-number" id="days">00</span><span class="countdown-label">Dias</span></div>
+                <div class="countdown-box"><span class="countdown-number" id="hours">00</span><span class="countdown-label">Horas</span></div>
+                <div class="countdown-box"><span class="countdown-number" id="mins">00</span><span class="countdown-label">Min</span></div>
+                <div class="countdown-box"><span class="countdown-number" id="secs">00</span><span class="countdown-label">Seg</span></div>
+            </div>
+        </div>
+
+        <a href="https://lista.havan.com.br/Convidado/ItensListaPresente/935149" target="_blank" class="btn-action btn-presentes">
+            🎁 Abrir Baú de Presentes
+        </a>
+
+        <a href="https://api.whatsapp.com/send?phone=5551999999999&text=Confirmo%20presen%C3%A7a%20no%20anivers%C3%A1rio%20da%20Alice!" target="_blank" class="btn-action">
+            💬 Confirmar Presença via WhatsApp
+        </a>
+
+        <a href="https://maps.google.com" target="_blank" class="btn-action">
+            📍 Abrir Local no Google Maps
+        </a>
+
+        <div class="section-gallery">
+            <h3>Galeria Encantada</h3>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="alice-1.jpg" alt="Alice"></div>
+                <div class="gallery-item"><img src="alice-2.jpg" alt="Alice"></div>
+                <div class="gallery-item horizontal"><img src="alice-3.jpg" alt="Alice"></div>
+                <div class="gallery-item"><img src="alice-4.jpg" alt="Alice"></div>
+                <div class="gallery-item"><img src="alice-5.jpg" alt="Alice"></div>
+                <div class="gallery-item horizontal"><img src="alice-6.jpg" alt="Alice"></div>
+                <div class="gallery-item"><img src="alice-7.jpg" alt="Alice"></div>
+                <div class="gallery-item"><img src="alice-8.jpg" alt="Alice"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Criação de Lanternas Dinâmicas
+        const container = document.getElementById('lantern-container');
+        function createLantern() {
+            let lantern = document.createElement('div');
+            lantern.className = 'lantern';
+            lantern.style.left = Math.random() * 100 + 'vw';
+            lantern.style.animationDelay = Math.random() * 5 + 's';
+            lantern.style.animationDuration = (Math.random() * 6 + 10) + 's';
+            container.appendChild(lantern);
+            
+            setTimeout(() => { lantern.remove(); }, 15000);
+        }
+        setInterval(createLantern, 600);
+
+        // Fluxo de Telas Animado
+        function startRoyalJourney() {
+            document.getElementById('gateScreen').classList.add('hidden-gate');
+            
+            setTimeout(() => {
+                const introScreen = document.getElementById('introScreen');
+                const introText = document.getElementById('introText');
+                
+                introScreen.style.visibility = 'visible';
+                introScreen.style.opacity = '1';
+                
+                setTimeout(() => {
+                    introText.style.opacity = '1';
+                    introText.style.transform = 'translateY(0)';
+                }, 500);
+
+                setTimeout(() => {
+                    introScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        introScreen.style.visibility = 'hidden';
+                        
+                        const mainInv = document.getElementById('mainInvitation');
+                        mainInv.style.display = 'block';
+                        setTimeout(() => { mainInv.style.opacity = '1'; }, 100);
+                    }, 1500);
+                }, 4000);
+
+            }, 1200);
+        }
+
+        // Lógica da Contagem Regressiva
+        // AJUSTE AQUI: Mude o ano, mês (0 para Janeiro, 9 para Outubro, etc), dia, hora
+        const partyDate = new Date(2026, 9, 17, 16, 0, 0).getTime(); 
+
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = partyDate - now;
+
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("mins").innerText = "00";
+                document.getElementById("secs").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("mins").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("secs").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }, 1000);
+    </script>
+</body>
+</html>
